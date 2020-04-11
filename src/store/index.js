@@ -20,7 +20,15 @@ export default new Vuex.Store({
       const users = await fetch('https://reqres.in/api/users?page=1')
         .then((res) => res.json());
 
-      context.commit('setUsers', users.data);
+      const parsedUsers = users.data.map((user) => {
+        const newObj = { ...user };
+
+        newObj.full_name = `${newObj.first_name} ${newObj.last_name}`;
+
+        return newObj;
+      });
+
+      context.commit('setUsers', parsedUsers);
     },
   },
 });
