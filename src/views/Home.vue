@@ -8,7 +8,9 @@
         </div>
         <div class="users-filter__item users-filter__amount-per-page">
           <label>Display per page:</label>
-          <select v-model="usersPerPage">
+          <select
+            @change="goToPage(1)"
+            v-model="usersPerPage">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
@@ -77,9 +79,10 @@ export default {
     },
     userPages() {
       let res = [];
+      const usersPerPage = parseInt(this.usersPerPage, 10);
 
-      for (let from = 0; from < this.filteredUsers.length; from += this.usersPerPage) {
-        res = [...res, this.filteredUsers.slice(from, from + this.usersPerPage)];
+      for (let from = 0; from < this.filteredUsers.length; from += usersPerPage) {
+        res = [...res, this.filteredUsers.slice(from, from + usersPerPage)];
       }
 
       return res;
