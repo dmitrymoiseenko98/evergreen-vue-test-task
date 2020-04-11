@@ -18,9 +18,25 @@ export default new Vuex.Store({
   },
   actions: {
     async getUsers(context) {
-      const users = await axios.get('https://reqres.in/api/users?page=1');
+      const urlBase = 'https://reqres.in/api/users?page=';
+      const firstPageRes = await axios.get(`${urlBase}1`);
+      const otherPagesPromises = [];
 
-      const parsedUsers = users.data.data.map((user) => {
+      for (let i = 2; i <= firstPageRes.data.total_pages; i += 1) {
+        otherPagesPromises.push(axios.get(`${urlBase}${i}`));
+      }
+
+      let allUsers = [...firstPageRes.data.data];
+
+      await axios.all(otherPagesPromises).then(axios.spread((...responses) => {
+        responses.forEach((item) => {
+          allUsers = [...allUsers, ...item.data.data];
+        });
+      })).catch((err) => {
+        throw new Error(err);
+      });
+
+      const parsedUsers = allUsers.map((user) => {
         const newObj = { ...user };
 
         newObj.full_name = `${newObj.first_name} ${newObj.last_name}`;
