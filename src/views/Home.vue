@@ -18,10 +18,12 @@
         </div>
       </form>
       <ul class="users-list">
-        <li class="user" v-for="user in userPages[page - 1]" :key="user.id">
-          <img class="user__avatar" :src="user.avatar" alt="avatar">
-          <p class="user__name">{{user.first_name}} {{user.last_name}}</p>
-          <p class="user__email">{{user.email}}</p>
+        <li class="user-card" v-for="user in userPages[page - 1]" :key="user.id">
+          <router-link :to="{ name: 'User', params: { id: user.id }}" class="user-card__link">
+            <img class="user-card__avatar" :src="user.avatar" alt="avatar">
+            <p class="user-card__name">{{user.full_name}}</p>
+            <p class="user-card__email">{{user.email}}</p>
+          </router-link>
         </li>
       </ul>
       <div
@@ -142,20 +144,28 @@ body {
   list-style-type: none;
 }
 
-.user {
+.user-card {
   width: 300px;
   margin: 10px;
-  padding: 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
 }
 
-.user__avatar {
+.user-card__link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.user-card__avatar {
   border-radius: 100%;
 }
 
-.user__name,
-.user__email {
+.user-card__name,
+.user-card__email {
   margin: 15px 0 0;
 }
 

@@ -10,6 +10,7 @@ export default new Vuex.Store({
   },
   getters: {
     users: (state) => state.users,
+    user: (state) => (id) => state.users.find((user) => user.id === id),
   },
   mutations: {
     setUsers(state, users) {
@@ -36,12 +37,15 @@ export default new Vuex.Store({
         throw new Error(err);
       });
 
-      const parsedUsers = allUsers.map((user) => {
+      const parsedUsers = [];
+
+      allUsers.forEach((user, index) => {
         const newObj = { ...user };
 
+        newObj.id = index;
         newObj.full_name = `${newObj.first_name} ${newObj.last_name}`;
 
-        return newObj;
+        parsedUsers.push(newObj);
       });
 
       context.commit('setUsers', parsedUsers);
